@@ -452,13 +452,29 @@ const char *sr_get_repo_path(void);
 /**
  * @brief Install a new schema (module) into sysrepo. Deferred until there are no connections!
  *
+ * For all datastores the internal DS implementation `LYB file` is used.
+ *
  * @param[in] conn Connection to use.
  * @param[in] schema_path Path to the new schema. Can have either YANG or YIN extension/format.
  * @param[in] search_dirs Optional search directories for import schemas, supports the format `<dir>[:<dir>]*`.
  * @param[in] features Optional array of enabled features ended with NULL.
+ * @param[in] datastore_name Datastore implementation name for this module, if NULL the default `LYB file` is used.
  * @return Error code (::SR_ERR_OK on success).
  */
 int sr_install_module(sr_conn_ctx_t *conn, const char *schema_path, const char *search_dirs, const char **features);
+
+/**
+ * @brief Install a new schema (module) into sysrepo. Deferred until there are no connections!
+ *
+ * @param[in] conn Connection to use.
+ * @param[in] schema_path Path to the new schema. Can have either YANG or YIN extension/format.
+ * @param[in] search_dirs Optional search directories for import schemas, supports the format `<dir>[:<dir>]*`.
+ * @param[in] features Optional array of enabled features ended with NULL.
+ * @param[in] module_ds Datastore implementation plugin name for each config datastore.
+ * @return Error code (::SR_ERR_OK on success).
+ */
+int sr_install_module_custom_ds(sr_conn_ctx_t *conn, const char *schema_path, const char *search_dirs,
+        const char **features, const sr_module_ds_t *module_ds);
 
 /**
  * @brief Set newly installed module startup and running data. It is necessary in case empty data are not valid
@@ -1528,14 +1544,14 @@ int sr_oper_get_items_subscribe(sr_session_ctx_t *session, const char *module_na
  */
 
 /**
- * @brief Sysrepo plugin initialization callback name that must exist in every plugin.
+ * @brief sysrepo-plugind plugin initialization callback name that must exist in every plugin.
  *
  * The callback must be of ::srp_init_cb_t type.
  */
 #define SRP_INIT_CB     "sr_plugin_init_cb"
 
 /**
- * @brief Sysrepo plugin cleanup callback name that must exist in every plugin.
+ * @brief sysrepo-plugind plugin cleanup callback name that must exist in every plugin.
  *
  * The callback must be of ::srp_cleanup_cb_t type.
  */
@@ -1546,24 +1562,52 @@ int sr_oper_get_items_subscribe(sr_session_ctx_t *session, const char *module_na
  *
  * @param[in] ... Format string and arguments.
  */
-#define SRP_LOG_ERR(...) srp_log(SR_LL_ERR, __VA_ARGS__)
+#define SRPLG_LOG_ERR(plg_name, ...) srplg_log(plg_name, SR_LL_ERR, __VA_ARGS__)
 
 /**
  * @brief Log a plugin warning message with format arguments.
  *
  * @param[in] ... Format string and arguments.
  */
-#define SRP_LOG_WRN(...) srp_log(SR_LL_WRN, __VA_ARGS__)
+#define SRPLG_LOG_WRN(plg_name, ...) srplg_log(plg_name, SR_LL_WRN, __VA_ARGS__)
 
 /**
  * @brief Log a plugin info message with format arguments.
  *
  * @param[in] ... Format string and arguments.
  */
-#define SRP_LOG_INF(...) srp_log(SR_LL_INF, __VA_ARGS__)
+#define SRPLG_LOG_INF(plg_name, ...) srplg_log(plg_name, SR_LL_INF, __VA_ARGS__)
 
 /**
  * @brief Log a plugin debug message with format arguments.
+ *
+ * @param[in] ... Format string and arguments.
+ */
+#define SRPLG_LOG_DBG(plg_name, ...) srplg_log(plg_name, SR_LL_DBG, __VA_ARGS__)
+
+/**
+ * @brief Deprecated, use ::SRPLG_LOG_ERR.
+ *
+ * @param[in] ... Format string and arguments.
+ */
+#define SRP_LOG_ERR(...) srp_log(SR_LL_ERR, __VA_ARGS__)
+
+/**
+ * @brief Deprecated, use ::SRPLG_LOG_WRN.
+ *
+ * @param[in] ... Format string and arguments.
+ */
+#define SRP_LOG_WRN(...) srp_log(SR_LL_WRN, __VA_ARGS__)
+
+/**
+ * @brief Deprecated, use ::SRPLG_LOG_INF.
+ *
+ * @param[in] ... Format string and arguments.
+ */
+#define SRP_LOG_INF(...) srp_log(SR_LL_INF, __VA_ARGS__)
+
+/**
+ * @brief Deprecated, use ::SRPLG_LOG_DBG.
  *
  * @param[in] ... Format string and arguments.
  */
@@ -1574,6 +1618,17 @@ int sr_oper_get_items_subscribe(sr_session_ctx_t *session, const char *module_na
 /**
  * @internal
  * @brief Log a plugin message with variable arguments.
+ *
+ * @param[in] plg_name Plugin name that is part of the message.
+ * @param[in] ll Log level (severity).
+ * @param[in] format Message format.
+ * @param[in] ... Format arguments.
+ */
+void srplg_log(const char *plg_name, sr_log_level_t ll, const char *format, ...);
+
+/**
+ * @internal
+ * @brief Deprecated.
  *
  * @param[in] ll Log level (severity).
  * @param[in] format Message format.

@@ -93,7 +93,7 @@ cmp_int_data(sr_conn_ctx_t *conn, const char *module_name, const char *expected)
 
     /* set replay support timestamp to zeroes */
     for (ptr = strstr(str, "<replay-support>"); ptr; ptr = strstr(ptr, "<replay-support>")) {
-        for (ptr += 16; isdigit(ptr[0]); ++ptr) {
+        for (ptr += 16; ptr[0] != '<'; ++ptr) {
             ptr[0] = '0';
         }
     }
@@ -149,6 +149,11 @@ test_install_module(void **state)
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>main-mod</name>"
         "<enabled-feature>feat</enabled-feature>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
 
@@ -199,6 +204,11 @@ test_data_deps(void **state)
     cmp_int_data(st->conn, "test",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>test</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<removed/>"
         "<inverse-deps>refs</inverse-deps>"
     "</module>"
@@ -207,7 +217,12 @@ test_data_deps(void **state)
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>ietf-interfaces</name>"
         "<revision>2014-05-08</revision>"
-        "<replay-support>0000000000</replay-support>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<replay-support>00000000000000000000000000000000000</replay-support>"
         "<removed/>"
     "</module>"
     );
@@ -215,13 +230,23 @@ test_data_deps(void **state)
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>iana-if-type</name>"
         "<revision>2014-05-08</revision>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<removed/>"
     "</module>"
     );
     cmp_int_data(st->conn, "refs",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>refs</name>"
-        "<replay-support>0000000000</replay-support>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<replay-support>00000000000000000000000000000000000</replay-support>"
         "<removed/>"
         "<deps>"
             "<module>test</module>"
@@ -267,13 +292,23 @@ test_op_deps(void **state)
     cmp_int_data(st->conn, "ops-ref",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>ops-ref</name>"
-        "<replay-support>0000000000</replay-support>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<replay-support>00000000000000000000000000000000000</replay-support>"
     "</module>"
     );
 
     cmp_int_data(st->conn, "ops",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>ops</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<rpc>"
             "<path xmlns:o=\"urn:ops\">/o:cont/o:list1/o:cont2/o:act1</path>"
             "<out>"
@@ -333,6 +368,11 @@ test_op_deps(void **state)
     cmp_int_data(st->conn, "ops",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>ops</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<rpc>"
             "<path xmlns:o=\"urn:ops\">/o:cont/o:list1/o:act2</path>"
         "</rpc>"
@@ -425,6 +465,11 @@ test_inv_deps(void **state)
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>ietf-routing</name>"
         "<revision>2015-04-17</revision>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<removed/>"
         "<deps>"
             "<module>ietf-interfaces</module>"
@@ -446,6 +491,11 @@ test_inv_deps(void **state)
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>ietf-interfaces</name>"
         "<revision>2014-05-08</revision>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<removed/>"
         "<deps>"
             "<module>ietf-routing</module>"
@@ -540,7 +590,12 @@ test_remove_dep_module(void **state)
     cmp_int_data(st->conn, "ops-ref",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>ops-ref</name>"
-        "<replay-support>0000000000</replay-support>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<replay-support>00000000000000000000000000000000000</replay-support>"
         "<removed/>"
     "</module>"
     );
@@ -590,6 +645,11 @@ test_remove_imp_module(void **state)
     cmp_int_data(st->conn, "simple-imp",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>simple-imp</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
 
@@ -621,6 +681,11 @@ test_update_module(void **state)
     cmp_int_data(st->conn, "rev",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>rev</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
 
@@ -654,6 +719,11 @@ test_update_module(void **state)
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>rev</name>"
         "<revision>1970-01-01</revision>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<notification>"
             "<path xmlns:r=\"urn:rev\">/r:notif</path>"
         "</notification>"
@@ -703,12 +773,22 @@ test_change_feature(void **state)
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>features</name>"
         "<enabled-feature>feat1</enabled-feature>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<deps><module>test</module></deps>"
     "</module>"
     );
     cmp_int_data(st->conn, "test",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>test</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<inverse-deps>features</inverse-deps>"
     "</module>"
     );
@@ -734,6 +814,11 @@ test_change_feature(void **state)
         "<enabled-feature>feat1</enabled-feature>"
         "<enabled-feature>feat2</enabled-feature>"
         "<enabled-feature>feat3</enabled-feature>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<deps><module>test</module></deps>"
     "</module>"
     );
@@ -777,6 +862,11 @@ test_change_feature(void **state)
     cmp_int_data(st->conn, "features",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>features</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
 
@@ -784,6 +874,11 @@ test_change_feature(void **state)
     cmp_int_data(st->conn, "test",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>test</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
 
@@ -847,25 +942,45 @@ test_replay_support(void **state)
     cmp_int_data(st->conn, "test",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>test</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
     cmp_int_data(st->conn, "ietf-interfaces",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>ietf-interfaces</name>"
         "<revision>2014-05-08</revision>"
-        "<replay-support>0000000000</replay-support>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<replay-support>00000000000000000000000000000000000</replay-support>"
     "</module>"
     );
     cmp_int_data(st->conn, "iana-if-type",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>iana-if-type</name>"
         "<revision>2014-05-08</revision>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
     cmp_int_data(st->conn, "simple",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>simple</name>"
-        "<replay-support>0000000000</replay-support>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<replay-support>00000000000000000000000000000000000</replay-support>"
     "</module>"
     );
 
@@ -876,27 +991,47 @@ test_replay_support(void **state)
     cmp_int_data(st->conn, "test",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>test</name>"
-        "<replay-support>0000000000</replay-support>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<replay-support>00000000000000000000000000000000000</replay-support>"
     "</module>"
     );
     cmp_int_data(st->conn, "ietf-interfaces",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>ietf-interfaces</name>"
         "<revision>2014-05-08</revision>"
-        "<replay-support>0000000000</replay-support>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<replay-support>00000000000000000000000000000000000</replay-support>"
     "</module>"
     );
     cmp_int_data(st->conn, "iana-if-type",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>iana-if-type</name>"
         "<revision>2014-05-08</revision>"
-        "<replay-support>0000000000</replay-support>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<replay-support>00000000000000000000000000000000000</replay-support>"
     "</module>"
     );
     cmp_int_data(st->conn, "simple",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>simple</name>"
-        "<replay-support>0000000000</replay-support>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<replay-support>00000000000000000000000000000000000</replay-support>"
     "</module>"
     );
 
@@ -907,23 +1042,43 @@ test_replay_support(void **state)
     cmp_int_data(st->conn, "test",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>test</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
     cmp_int_data(st->conn, "ietf-interfaces",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>ietf-interfaces</name>"
         "<revision>2014-05-08</revision>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
     cmp_int_data(st->conn, "iana-if-type",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>iana-if-type</name>"
         "<revision>2014-05-08</revision>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
     cmp_int_data(st->conn, "simple",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>simple</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
 
@@ -963,6 +1118,11 @@ test_foreign_aug(void **state)
     cmp_int_data(st->conn, "aug",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>aug</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<inverse-deps>aug-trg</inverse-deps>"
     "</module>"
     );
@@ -970,9 +1130,12 @@ test_foreign_aug(void **state)
     cmp_int_data(st->conn, "aug-trg",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>aug-trg</name>"
-        "<deps>"
-            "<module>aug</module>"
-        "</deps>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<deps><module>aug</module></deps>"
     "</module>"
     );
 
@@ -1013,6 +1176,11 @@ test_foreign_aug(void **state)
     cmp_int_data(st->conn, "aug",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>aug</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
         "<inverse-deps>aug-trg</inverse-deps>"
     "</module>"
     );
@@ -1020,9 +1188,12 @@ test_foreign_aug(void **state)
     cmp_int_data(st->conn, "aug-trg",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>aug-trg</name>"
-        "<deps>"
-            "<module>aug</module>"
-        "</deps>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
+        "<deps><module>aug</module></deps>"
     "</module>"
     );
 
@@ -1077,6 +1248,11 @@ test_empty_invalid(void **state)
     cmp_int_data(st->conn, "mandatory",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>mandatory</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
 
@@ -1163,6 +1339,11 @@ test_startup_data_foreign_identityref(void **state)
     cmp_int_data(st->conn, "t1",
     "<installed-module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>t1</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</installed-module>"
     );
 
@@ -1182,6 +1363,11 @@ test_startup_data_foreign_identityref(void **state)
     cmp_int_data(st->conn, "t2",
     "<installed-module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>t2</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</installed-module>"
     );
 
@@ -1202,11 +1388,21 @@ test_startup_data_foreign_identityref(void **state)
     cmp_int_data(st->conn, "t1",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>t1</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
     cmp_int_data(st->conn, "t2",
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>t2</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>"
     );
 
@@ -1437,6 +1633,11 @@ test_get_module_info(void **state)
     str2 =
     "<module xmlns=\"http://www.sysrepo.org/yang/sysrepo\">"
         "<name>test</name>"
+        "<plugin><datastore>startup</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>running</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>candidate</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>operational</datastore><name>LYB DS file</name></plugin>"
+        "<plugin><datastore>notification</datastore><name>LYB notif</name></plugin>"
     "</module>";
     assert_string_equal(str, str2);
     free(str);
